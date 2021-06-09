@@ -23,9 +23,9 @@ socket.on('message', (message) => {
 }); 
 
 window.addEventListener('load', async () => {
-  const dbMessages = await (await fetch('http://localhost:3000/messages')).json();
+  const messages = await (await fetch('http://localhost:3000/messages')).json();
 
-  dbMessages.forEach((e) => {
+  messages.forEach((e) => {
     const message = ` ${e.message} ${e.nickname} ${e.timestamp}`;
     chatMessages.insertAdjacentHTML('beforeend', `<li data-testid="message"> ${message}</li>`);
   });
