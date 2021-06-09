@@ -23,7 +23,8 @@ socket.on('message', (message) => {
 }); 
 
 window.addEventListener('load', async () => {
-  const messages = await (await fetch('http://localhost:3000/messages')).json();
+  const BASE_URL = 'http://localhost:3000/';
+  const messages = await (await fetch(`${BASE_URL}/messages`)).json();
 
   messages.forEach((e) => {
     const message = ` ${e.message} ${e.nickname} ${e.timestamp}`;
