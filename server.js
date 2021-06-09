@@ -23,7 +23,22 @@ const updateOnLine = (changeNick) => {
     onLine[result] = { id, userName: nickname };
 };
 
-io.on('connection', (socket) => {
+const gerMessage = async (chatMessage, nickname) => {
+  const timestamp = moment().format('DD-MM-yyyy HH:mm:ss');
+  // const msg = `${chatMessage} ${nickname} ${timestamp}`;
+  await webChatModel.create(chatMessage, nickname, timestamp);
+  const msg = await webChatModel.getAll();
+  return msg;
+};
+
+const gethistory = async () => {
+  const history = await webChatModel.getAll();
+  return history;
+};
+
+io.on('connection', async (socket) => {
+  const history = await gethistory();
+  socket.emit('history', history);
   // console.log(`Socket conectado: ${socket.id}.`);
 
   socket.emit('localUser', socket.id);
@@ -40,9 +55,7 @@ io.on('connection', (socket) => {
 });
   
   socket.on('message', async ({ chatMessage, nickname }) => {
-      const timestamp = moment().format('DD-MM-yyyy HH:mm:ss');
-      const message = `${chatMessage} ${nickname} ${timestamp}`;
-      await webChatModel.create(chatMessage, nickname, timestamp);
+      const message = await gerMessage(chatMessage, nickname);
       io.emit('message', message); 
 });
 
@@ -57,14 +70,14 @@ io.on('connection', (socket) => {
   app.use(cors());
   app.use(express.static(`${__dirname}/public`));
 
-  app.get('/messages', async (_req, res) => {
-    try {
-      const messages = await webChatModel.getAll();
-      res.status(200).json(messages);
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  // app.get('/messages', async (_req, res) => {
+  //   try {
+  //     const messages = await webChatModel.getAll();
+  //     res.status(200).json(messages);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // });
 
   const PORT = process.env.PORT || 3000;
   

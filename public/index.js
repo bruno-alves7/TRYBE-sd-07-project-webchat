@@ -8,7 +8,9 @@ const sendNick = document.getElementById('nicknameBtn');
 const nick = document.getElementById('nickname');
 
 sendMessage.addEventListener('click', () => {
-  socket.emit('message', { chatMessage: messageInput.value, nickname: nick.value });
+  const chatMessage = messageInput.value;
+  const nickname = nick.value;
+  socket.emit('message', { chatMessage, nickname });
   messageInput.value = '';
 });
 
@@ -18,19 +20,24 @@ sendNick.addEventListener('click', () => {
   chatMessages.insertAdjacentHTML('beforeend', `<li>${nick.value} alterou seu nick.</li>`);
 });
 
-socket.on('message', (message) => {
-    chatMessages.insertAdjacentHTML('beforeend', `<li data-testid="message"> ${message}</li>`);
+socket.on('message', (messages) => {
+  chatMessages.innerHTML = '';
+  messages.forEach((e) => {
+        const message = ` ${e.message} ${e.nickname} ${e.timestamp}`;
+        chatMessages.insertAdjacentHTML('beforeend', `<li data-testid="message"> ${message}</li>`);
+      });
+    // chatMessages.insertAdjacentHTML('beforeend', `<li data-testid="message"> ${message}</li>`);
 }); 
 
-window.addEventListener('load', async () => {
-  const BASE_URL = 'http://localhost:3000/';
-  const messages = await (await fetch(`${BASE_URL}/messages`)).json();
+// window.addEventListener('load', async () => {
+//   const BASE_URL = 'http://localhost:3000/';
+//   const messages = await (await fetch(`${BASE_URL}/messages`)).json();
 
-  messages.forEach((e) => {
-    const message = ` ${e.message} ${e.nickname} ${e.timestamp}`;
-    chatMessages.insertAdjacentHTML('beforeend', `<li data-testid="message"> ${message}</li>`);
-  });
-});
+//   messages.forEach((e) => {
+//     const message = ` ${e.message} ${e.nickname} ${e.timestamp}`;
+//     chatMessages.insertAdjacentHTML('beforeend', `<li data-testid="message"> ${message}</li>`);
+//   });
+// });
 
 socket.on('newUser', (newUser) => {
   usersOnline.innerHTML = '';
@@ -54,4 +61,11 @@ socket.on('newUser', (newUser) => {
 
 socket.on('localUser', (user) => {
   sessionStorage.setItem('user', user);
+});
+
+socket.on('history', (history) => {
+  history.forEach((e) => {
+    const message = ` ${e.message} ${e.nickname} ${e.timestamp}`;
+    chatMessages.insertAdjacentHTML('beforeend', `<li data-testid="message"> ${message}</li>`);
+  });
 });
