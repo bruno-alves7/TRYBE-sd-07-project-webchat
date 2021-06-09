@@ -20,12 +20,8 @@ sendNick.addEventListener('click', () => {
   chatMessages.insertAdjacentHTML('beforeend', `<li>${nick.value} alterou seu nick.</li>`);
 });
 
-socket.on('message', (messages) => {
-  chatMessages.innerHTML = '';
-  messages.forEach((e) => {
-        const message = ` ${e.message} ${e.nickname} ${e.timestamp}`;
+socket.on('message', (message) => {
         chatMessages.insertAdjacentHTML('beforeend', `<li data-testid="message"> ${message}</li>`);
-      });
     // chatMessages.insertAdjacentHTML('beforeend', `<li data-testid="message"> ${message}</li>`);
 }); 
 

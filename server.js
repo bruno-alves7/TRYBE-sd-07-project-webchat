@@ -25,9 +25,9 @@ const updateOnLine = (changeNick) => {
 
 const gerMessage = async (chatMessage, nickname) => {
   const timestamp = moment().format('DD-MM-yyyy HH:mm:ss');
-  // const msg = `${chatMessage} ${nickname} ${timestamp}`;
+  const msg = `${chatMessage} ${nickname} ${timestamp}`;
   await webChatModel.create(chatMessage, nickname, timestamp);
-  const msg = await webChatModel.getAll();
+  // const msg = await webChatModel.getAll();
   return msg;
 };
 
