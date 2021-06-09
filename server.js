@@ -66,6 +66,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  const { PORT } = process.env;
+  const PORT = process.env.PORT || 3000;
   
   httpServe.listen(PORT, () => console.log(`Rodando na porta ${PORT}`)); 
