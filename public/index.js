@@ -8,7 +8,7 @@ const sendNick = document.getElementById('nicknameBtn');
 const nick = document.getElementById('nickname');
 
 sendMessage.addEventListener('click', () => {
-  socket.emit('message', { nickname: nick.value, chatMessage: messageInput.value });
+  socket.emit('message', { chatMessage: messageInput.value, nickname: nick.value });
   messageInput.value = '';
 });
 
