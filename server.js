@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
     io.emit('newUser', onLine);
 });
   
-  socket.on('message', async ({ nickname, chatMessage }) => {
+  socket.on('message', async ({ chatMessage, nickname }) => {
       const timestamp = moment().format('DD-MM-yyyy HH:mm:ss');
       const message = `${chatMessage} ${nickname} ${timestamp}`;
       await webChatModel.create(chatMessage, nickname, timestamp);
